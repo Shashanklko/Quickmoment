@@ -100,6 +100,7 @@ export const AFFILIATE_CONFIG = {
       description: 'Handpicked classics on compounding, investing, and financial independence.',
       badge: 'Amazon Choice',
       category: 'finance',
+      dealUrl: 'https://link.amazon/B0h36GxsC',
     },
     {
       id: 'scientific-calculators',
@@ -107,6 +108,7 @@ export const AFFILIATE_CONFIG = {
       description: 'Official hardware calculators for engineering, CFA, MBA, and university exams.',
       badge: 'Best Seller',
       category: 'education',
+      dealUrl: 'https://link.amazon/B09BXWCdu',
     },
     {
       id: 'desk-tech',
@@ -114,6 +116,7 @@ export const AFFILIATE_CONFIG = {
       description: 'Ergonomic setups, 4K ultrawide monitors, and productivity accessories.',
       badge: 'Trending Deal',
       category: 'developer',
+      dealUrl: 'https://www.amazon.in/dp/B0GNRF626K?aref=5d75ZToy8r&aaxitk=fc17998f969c29aaad4b2d37073d0748&language=en_IN&pd_rd_plhdr=t&ref=dacx_dp_579446977388855987_580270237172116285&th=1',
     },
   ],
 };

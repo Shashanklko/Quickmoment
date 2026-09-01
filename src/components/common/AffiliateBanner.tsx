@@ -20,7 +20,7 @@ export const AffiliateBanner: React.FC<AffiliateBannerProps> = ({
   if (variant === 'compact') {
     return (
       <a
-        href={AFFILIATE_CONFIG.amazonAffiliateLink}
+        href={(deal as any).dealUrl || AFFILIATE_CONFIG.amazonAffiliateLink}
         target="_blank"
         rel="noopener noreferrer sponsored"
         className={`flex items-center justify-between p-3 rounded-xl bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/60 hover:border-amber-400 text-xs font-semibold text-amber-900 dark:text-amber-200 transition-all group ${className}`}
@@ -60,7 +60,7 @@ export const AffiliateBanner: React.FC<AffiliateBannerProps> = ({
         </div>
 
         <a
-          href={AFFILIATE_CONFIG.amazonAffiliateLink}
+          href={(deal as any).dealUrl || AFFILIATE_CONFIG.amazonAffiliateLink}
           target="_blank"
           rel="noopener noreferrer sponsored"
           className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-600 text-white shadow-md transition-all shrink-0 active:scale-95"
@@ -94,7 +94,7 @@ export const AffiliateBanner: React.FC<AffiliateBannerProps> = ({
       </div>
 
       <a
-        href={AFFILIATE_CONFIG.amazonAffiliateLink}
+        href={(deal as any).dealUrl || AFFILIATE_CONFIG.amazonAffiliateLink}
         target="_blank"
         rel="noopener noreferrer sponsored"
         className="inline-flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-600 text-white shadow-sm transition-all"
