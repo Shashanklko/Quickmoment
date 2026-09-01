@@ -7,6 +7,7 @@ import { Search, Sparkles, TrendingUp, ShieldCheck, Zap, ArrowRight, Dices, BarC
 import { AffiliateBanner } from '../common/AffiliateBanner';
 import { DailyFortuneWidget } from '../common/DailyFortuneWidget';
 import { LiveTickerTape } from '../common/LiveTickerTape';
+import { PlatformFaqSection } from '../common/PlatformFaqSection';
 import * as Icons from 'lucide-react';
 
 interface HomeViewProps {
@@ -285,6 +286,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
           })}
         </div>
       </section>
+
+      {/* Authority & AdSense Compliance FAQ Section */}
+      <PlatformFaqSection />
     </div>
   );
 };

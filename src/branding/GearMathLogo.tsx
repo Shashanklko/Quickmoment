@@ -172,9 +172,6 @@ export const GearMathLogo: React.FC<GearMathLogoProps> = ({
               PRO
             </span>
           </div>
-          <span className={`${currentSize.tag} font-medium text-slate-500 dark:text-slate-400 -mt-0.5 tracking-wide`}>
-            Smart Calculators & Simulations
-          </span>
         </div>
       )}
     </div>
