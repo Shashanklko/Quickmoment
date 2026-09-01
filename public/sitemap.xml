@@ -2,25 +2,25 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Core Platform Modes -->
   <url>
-    <loc>https://quickmoment.fun/</loc>
+    <loc>https://www.quickmoment.fun/</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://quickmoment.fun/?mode=newsroom</loc>
+    <loc>https://www.quickmoment.fun/?mode=newsroom</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://quickmoment.fun/?mode=blog</loc>
+    <loc>https://www.quickmoment.fun/?mode=blog</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://quickmoment.fun/?mode=calculator</loc>
+    <loc>https://www.quickmoment.fun/?mode=calculator</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
@@ -28,55 +28,55 @@
 
   <!-- Popular Calculators -->
   <url>
-    <loc>https://quickmoment.fun/?calc=loan-emi-calculator</loc>
+    <loc>https://www.quickmoment.fun/?calc=loan-emi-calculator</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://quickmoment.fun/?calc=sip-wealth-builder</loc>
+    <loc>https://www.quickmoment.fun/?calc=sip-wealth-builder</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://quickmoment.fun/?calc=income-tax-calculator</loc>
+    <loc>https://www.quickmoment.fun/?calc=income-tax-calculator</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://quickmoment.fun/?calc=rent-vs-buy-calculator</loc>
+    <loc>https://www.quickmoment.fun/?calc=rent-vs-buy-calculator</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://quickmoment.fun/?calc=bmi-calorie-calculator</loc>
+    <loc>https://www.quickmoment.fun/?calc=bmi-calorie-calculator</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://quickmoment.fun/?calc=monte-carlo-simulator</loc>
+    <loc>https://www.quickmoment.fun/?calc=monte-carlo-simulator</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://quickmoment.fun/?calc=quickstats-csv-analyzer</loc>
+    <loc>https://www.quickmoment.fun/?calc=quickstats-csv-analyzer</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://quickmoment.fun/?calc=cgpa-to-percentage-calculator</loc>
+    <loc>https://www.quickmoment.fun/?calc=cgpa-to-percentage-calculator</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://quickmoment.fun/?calc=percentage-change-calculator</loc>
+    <loc>https://www.quickmoment.fun/?calc=percentage-change-calculator</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
@@ -84,31 +84,31 @@
 
   <!-- Categories -->
   <url>
-    <loc>https://quickmoment.fun/?cat=finance</loc>
+    <loc>https://www.quickmoment.fun/?cat=finance</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://quickmoment.fun/?cat=tax</loc>
+    <loc>https://www.quickmoment.fun/?cat=tax</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://quickmoment.fun/?cat=statistics</loc>
+    <loc>https://www.quickmoment.fun/?cat=statistics</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://quickmoment.fun/?cat=fitness</loc>
+    <loc>https://www.quickmoment.fun/?cat=fitness</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://quickmoment.fun/?cat=developer</loc>
+    <loc>https://www.quickmoment.fun/?cat=developer</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
