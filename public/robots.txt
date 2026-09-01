@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+# Sitemap Index
+Sitemap: https://quickmoment.fun/sitemap.xml
+Sitemap: https://www.quickmoment.fun/sitemap.xml
