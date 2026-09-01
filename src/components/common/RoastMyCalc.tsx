@@ -78,7 +78,119 @@ export const RoastMyCalc: React.FC<RoastMyCalcProps> = ({ calculatorSlug, result
       };
     }
 
-    if (calculatorSlug === 'cgpa-to-percentage-calculator') {
+    if (calculatorSlug === 'compound-interest-calculator') {
+      return {
+        title: '⏳ The Eighth Wonder Believer',
+        roast: 'Einstein called compound interest the 8th wonder of the world. He just forgot to mention you have to wait 20 years without panic-selling.',
+        tip: 'Tip: Increasing your compounding frequency or adding even ₹1,000 monthly drastically boosts returns.',
+      };
+    }
+
+    if (calculatorSlug === 'retirement-calculator') {
+      return {
+        title: '🏖️ The FIRE Daydreamer',
+        roast: 'Planning retirement is 10% math and 90% realizing inflation will make a single cup of chai cost ₹500 in 2055.',
+        tip: 'Tip: Every 1% higher pre-retirement return can reduce your required monthly savings by up to 20%.',
+      };
+    }
+
+    if (calculatorSlug === 'cagr-calculator') {
+      return {
+        title: '📈 FinTwit Screenshot Enthusiast',
+        roast: 'Your portfolio CAGR looks great until you adjust for the crypto dip you promised yourself you wouldn’t buy.',
+        tip: 'Tip: Aim for a consistent 12-15% CAGR rather than chasing 100% one-hit wonders.',
+      };
+    }
+
+    if (calculatorSlug === 'gst-calculator') {
+      return {
+        title: '🧾 The Invoice Detective',
+        roast: 'Splitting CGST and SGST 50/50 is the only true cooperative federalism that arrives on time every month.',
+        tip: 'Tip: Always claim eligible Input Tax Credit (ITC) to lower your net tax payout.',
+      };
+    }
+
+    if (calculatorSlug === 'binomial-distribution-calculator') {
+      return {
+        title: '🎲 The Bernoulli Gambler',
+        roast: 'You are calculating the exact probability of 5 heads in 10 coin flips while life is rolling a 20-sided die on your plans.',
+        tip: 'Tip: When n is large and p is close to 0.5, the Binomial distribution converges smoothly to Normal.',
+      };
+    }
+
+    if (calculatorSlug === 'linear-regression-calculator') {
+      return {
+        title: '📉 Trendline Prophet',
+        roast: 'Drawing a straight line through noisy data doesn’t predict the future, but it does make boardroom presentations look 40% smarter.',
+        tip: 'Tip: Check R² — a value above 0.8 indicates strong explanatory variance.',
+      };
+    }
+
+    if (calculatorSlug === 'confidence-interval-calculator') {
+      return {
+        title: '🎯 95% Certain, 5% Praying',
+        roast: 'Being 95% confident means that in 1 out of 20 universes, your statistical conclusion is wildly wrong.',
+        tip: 'Tip: Doubling your sample size (n) shrinks your margin of error by approximately 29%.',
+      };
+    }
+
+    if (calculatorSlug === 'developer-tools-suite') {
+      return {
+        title: '⚡ 10x Developer in Disguise',
+        roast: 'Formatting JSON at 2 AM is why you got into programming in the first place, right?',
+        tip: 'Tip: Bookmark this tool so you never have to paste production secrets into random online formatters.',
+      };
+    }
+
+    if (calculatorSlug === 'universal-unit-converter') {
+      return {
+        title: '📏 The Measurement Diplomat',
+        roast: 'Converting feet to meters because two continents couldn’t agree on how long a dead king’s shoe was.',
+        tip: 'Tip: Use standard SI base units whenever writing scientific or engineering specifications.',
+      };
+    }
+
+    if (calculatorSlug === 'break-even-calculator') {
+      return {
+        title: '☕ The Startup Founder',
+        roast: 'The break-even point is that magical promised land where you stop losing money and start paying taxes.',
+        tip: 'Tip: Lowering fixed overhead costs shifts your break-even volume significantly to the left.',
+      };
+    }
+
+    if (calculatorSlug === 'profit-margin-calculator') {
+      return {
+        title: '🏷️ The Markup Mastermind',
+        roast: 'Margin vs Markup is the classic trap: a 100% markup only gives you a 50% profit margin.',
+        tip: 'Tip: Premium brand positioning allows 60%+ gross margins.',
+      };
+    }
+
+    if (calculatorSlug === 'rent-vs-buy-calculator') {
+      return {
+        title: '🏠 The Real Estate Philosopher',
+        roast: 'Buying gives you emotional pride of ownership, while renting and investing the down payment gives you liquid sanity.',
+        tip: 'Tip: Factor in property maintenance (1-2%/yr) and stamp duty when comparing total buy costs.',
+      };
+    }
+
+    if (calculatorSlug === 'age-calculator' || calculatorSlug === 'date-difference-calculator') {
+      return {
+        title: '⏳ The Existential Clockwatcher',
+        roast: 'Counting exact seconds lived won’t stop time, but it will make your next birthday feel slightly more dramatic.',
+        tip: 'Tip: Use business day calculations for precise contract and notice period planning.',
+      };
+    }
+
+    if (calculatorSlug === 'percentage-calculator' || calculatorSlug === 'quadratic-equation-solver') {
+      return {
+        title: '📐 The Algebra Veteran',
+        roast: 'Finally putting that high school math to work in the real world!',
+        tip: 'Tip: Percentage difference is asymmetric: +50% followed by -50% leaves you at -25%!',
+      };
+    }
+
+    if (calculatorSlug === 'cgpa-to-percentage-calculator' || calculatorSlug === 'cgpa-calculator') {
       return {
         title: '🎓 The 9.5 Multiplier Magic',
         roast: 'Turning CGPA into percentage is proof that academic metrics are 50% knowledge and 50% arbitrary conversion tables.',

@@ -14,6 +14,7 @@ import { DistributionChart } from '../charts/DistributionChart';
 import { ScatterRegressionChart } from '../charts/ScatterRegressionChart';
 import { MonteCarloCanvas } from '../charts/MonteCarloCanvas';
 import { AffiliateBanner } from '../common/AffiliateBanner';
+import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 // Engines
 import { calculateEmi } from '../../engines/finance/emi';
@@ -44,7 +45,7 @@ import { convertUnit, UNIT_CATEGORIES, UnitCategory } from '../../engines/conver
 import { calculateImpulsePurchase, calculateMeetingCost, calculateCoffeeMillionaire, calculateBillionaireTime } from '../../engines/funny/quirkyCalculators';
 import { RoastMyCalc } from '../common/RoastMyCalc';
 
-import { ArrowLeft, Share2, Star, Sparkles, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Share2, Star, Sparkles, AlertCircle, Copy, Check } from 'lucide-react';
 import * as Icons from 'lucide-react';
 
 interface CalculatorDetailViewProps {
@@ -74,6 +75,7 @@ export const CalculatorDetailView: React.FC<CalculatorDetailViewProps> = ({
   });
 
   const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [copiedText, setCopiedText] = useState(false);
   const IconComponent = (Icons as any)[calculator.icon] || Icons.Calculator;
 
   const updateInput = (key: string, value: any) => {
@@ -156,7 +158,11 @@ export const CalculatorDetailView: React.FC<CalculatorDetailViewProps> = ({
           postRetirementReturnRate: inputs.postRetirementReturnRate,
           existingSavings: inputs.existingSavings,
         });
-        return { type: 'retirement', res };
+        const pieData = [
+          { name: 'Existing Savings (FV)', value: res.existingSavingsFutureValue, color: '#6366f1' },
+          { name: 'Shortfall to Fund', value: res.shortfallCorpus, color: '#f43f5e' },
+        ];
+        return { type: 'retirement', res, pieData };
       }
 
       case 'salary-calculator': {
@@ -182,7 +188,11 @@ export const CalculatorDetailView: React.FC<CalculatorDetailViewProps> = ({
           gstRate: inputs.gstRate,
           calculationType: inputs.calculationType,
         });
-        return { type: 'gst', res };
+        const pieData = [
+          { name: 'Net Base Price', value: res.baseAmount, color: '#6366f1' },
+          { name: 'Total GST Amount', value: res.gstAmount, color: '#f59e0b' },
+        ];
+        return { type: 'gst', res, pieData };
       }
 
       case 'descriptive-statistics-calculator': {
@@ -336,6 +346,7 @@ export const CalculatorDetailView: React.FC<CalculatorDetailViewProps> = ({
         const mode = inputs.toolMode || 'json';
         const txt = inputs.inputText || '';
         let devOut = '';
+        let colorDetails: any = null;
         if (mode === 'json') {
           const f = formatJson(txt);
           devOut = f.success ? f.result : `Error: ${f.error}`;
@@ -345,9 +356,10 @@ export const CalculatorDetailView: React.FC<CalculatorDetailViewProps> = ({
           devOut = generateUuidV4();
         } else if (mode === 'color') {
           const c = hexToRgbHsl(txt);
+          colorDetails = c;
           devOut = c ? JSON.stringify(c, null, 2) : 'Invalid HEX Color Code';
         }
-        return { type: 'developer', devOut, mode };
+        return { type: 'developer', devOut, mode, colorDetails };
       }
 
       case 'universal-unit-converter': {
@@ -640,6 +652,214 @@ export const CalculatorDetailView: React.FC<CalculatorDetailViewProps> = ({
       );
     }
 
+    if (res.type === 'compoundInterest') {
+      const ciRes = res.res;
+      return (
+        <div className="flex flex-col gap-5">
+          {/* Main Hero Result Card */}
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-brand-600 via-indigo-600 to-emerald-600 text-white shadow-lg relative overflow-hidden">
+            <span className="text-xs font-bold uppercase tracking-wider text-brand-200 block mb-1">
+              Future Compounded Wealth
+            </span>
+            <div className="text-3xl sm:text-4xl font-black font-mono tracking-tight">
+              ₹{ciRes.futureValue.toLocaleString('en-IN')}
+            </div>
+            <p className="text-xs text-brand-100 mt-2">
+              Principal of ₹{ciRes.totalPrincipal.toLocaleString('en-IN')} compounded {inputs.frequency} at {inputs.annualRate}% for {inputs.timeYears} years
+            </p>
+          </div>
+
+          {/* Key Metrics Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Total Principal Invested</span>
+              <span className="text-base font-bold font-mono text-slate-900 dark:text-white">
+                ₹{ciRes.totalPrincipal.toLocaleString('en-IN')}
+              </span>
+            </div>
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Total Interest Earned</span>
+              <span className="text-base font-bold font-mono text-emerald-600 dark:text-emerald-400">
+                +₹{ciRes.totalInterestEarned.toLocaleString('en-IN')}
+              </span>
+            </div>
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs col-span-2 sm:col-span-1">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Interest-to-Principal</span>
+              <span className="text-base font-bold font-mono text-amber-600 dark:text-amber-400">
+                {ciRes.interestToPrincipalRatio}%
+              </span>
+            </div>
+          </div>
+
+          {/* Donut Chart */}
+          <DonutChart
+            data={res.pieData}
+            title="Capital Allocation (Principal vs Accrued Interest)"
+            centerText={{
+              primary: `₹${(ciRes.futureValue / 100000).toFixed(1)}L`,
+              secondary: 'Total Wealth',
+            }}
+          />
+
+          {/* Area Growth Chart */}
+          {ciRes.progression && ciRes.progression.length > 0 && (
+            <AreaGrowthChart
+              data={ciRes.progression}
+              xAxisKey="year"
+              title="Compound Growth Progression Over Time"
+              series={[
+                { key: 'totalBalance', name: 'Total Portfolio Balance', color: '#10b981' },
+                { key: 'principalDeposited', name: 'Principal Invested', color: '#6366f1' },
+              ]}
+            />
+          )}
+        </div>
+      );
+    }
+
+    if (res.type === 'cagr') {
+      const cagrRes = res.res;
+      return (
+        <div className="flex flex-col gap-5">
+          {/* Main Hero Result Card */}
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-teal-600 via-emerald-600 to-indigo-600 text-white shadow-lg relative overflow-hidden">
+            <span className="text-xs font-bold uppercase tracking-wider text-teal-200 block mb-1">
+              Compound Annual Growth Rate (CAGR)
+            </span>
+            <div className="text-3xl sm:text-4xl font-black font-mono tracking-tight">
+              {cagrRes.cagrPercentage}% <span className="text-sm font-normal text-teal-200">p.a.</span>
+            </div>
+            <p className="text-xs text-teal-100 mt-2">
+              Smoothed annualized return from ₹{Number(inputs.initialValue).toLocaleString('en-IN')} to ₹{Number(inputs.finalValue).toLocaleString('en-IN')} over {inputs.durationYears} years
+            </p>
+          </div>
+
+          {/* Key Metrics Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Absolute Return</span>
+              <span className={`text-base font-bold font-mono ${cagrRes.absoluteReturnPercent >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+                {cagrRes.absoluteReturnPercent >= 0 ? '+' : ''}{cagrRes.absoluteReturnPercent}%
+              </span>
+            </div>
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Total Net Gain</span>
+              <span className={`text-base font-bold font-mono ${cagrRes.totalGain >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+                {cagrRes.totalGain >= 0 ? '+' : ''}₹{cagrRes.totalGain.toLocaleString('en-IN')}
+              </span>
+            </div>
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Money Multiplier</span>
+              <span className="text-base font-bold font-mono text-brand-600 dark:text-brand-400">
+                {cagrRes.multiplier}x
+              </span>
+            </div>
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Doubling Time (Rule of 72)</span>
+              <span className="text-base font-bold font-mono text-amber-600 dark:text-amber-400">
+                {cagrRes.ruleOf72Years > 0 ? `${cagrRes.ruleOf72Years} Yrs` : 'N/A'}
+              </span>
+            </div>
+          </div>
+
+          {/* Capital Comparison Visual Card */}
+          <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs flex flex-col gap-3">
+            <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+              Capital Growth Journey
+            </span>
+            <div className="flex items-center justify-between text-xs font-semibold">
+              <span className="text-slate-500">Initial: ₹{Number(inputs.initialValue).toLocaleString('en-IN')}</span>
+              <span className="text-emerald-600 dark:text-emerald-400">Final: ₹{Number(inputs.finalValue).toLocaleString('en-IN')}</span>
+            </div>
+            <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-3.5 overflow-hidden flex">
+              <div
+                className="bg-brand-500 h-full transition-all rounded-l-full"
+                style={{ width: `${Math.min(100, Math.max(10, (Number(inputs.initialValue) / Math.max(Number(inputs.initialValue), Number(inputs.finalValue))) * 100))}%` }}
+              />
+              <div
+                className="bg-emerald-500 h-full transition-all rounded-r-full"
+                style={{ width: `${Math.max(0, 100 - (Number(inputs.initialValue) / Math.max(Number(inputs.initialValue), Number(inputs.finalValue))) * 100)}%` }}
+              />
+            </div>
+            <div className="flex items-center justify-between text-[11px] text-slate-400">
+              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-brand-500 inline-block"></span> Initial Principal</span>
+              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Compounded Gain</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (res.type === 'retirement') {
+      const ret = res.res;
+      return (
+        <div className="flex flex-col gap-5">
+          {/* Main Hero Result Card */}
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-amber-600 via-orange-600 to-rose-600 text-white shadow-lg relative overflow-hidden">
+            <span className="text-xs font-bold uppercase tracking-wider text-amber-200 block mb-1">
+              Required Target Retirement Corpus
+            </span>
+            <div className="text-3xl sm:text-4xl font-black font-mono tracking-tight">
+              ₹{ret.requiredRetirementCorpus.toLocaleString('en-IN')}
+            </div>
+            <p className="text-xs text-amber-100 mt-2">
+              To sustain monthly expenses of <strong className="text-white">₹{ret.inflatedMonthlyExpenseAtRetirement.toLocaleString('en-IN')}/mo</strong> (inflation-adjusted) for {ret.yearsInRetirement} years post-retirement
+            </p>
+          </div>
+
+          {/* Key Metrics Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Monthly SIP Required</span>
+              <span className="text-base font-bold font-mono text-emerald-600 dark:text-emerald-400">
+                ₹{ret.requiredMonthlySavings.toLocaleString('en-IN')}
+              </span>
+            </div>
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Future Value of Savings</span>
+              <span className="text-base font-bold font-mono text-slate-900 dark:text-white">
+                ₹{ret.existingSavingsFutureValue.toLocaleString('en-IN')}
+              </span>
+            </div>
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs col-span-2 sm:col-span-1">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Corpus Shortfall to Fund</span>
+              <span className="text-base font-bold font-mono text-rose-600 dark:text-rose-400">
+                ₹{ret.shortfallCorpus.toLocaleString('en-IN')}
+              </span>
+            </div>
+          </div>
+
+          {/* FIRE & Timeline Summary Card */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Accumulation Horizon</span>
+              <span className="text-base font-bold font-mono text-brand-600 dark:text-brand-400">
+                {ret.yearsToRetirement} Years to Retire
+              </span>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">FIRE Multiple</span>
+              <span className="text-base font-bold font-mono text-amber-600 dark:text-amber-400">
+                {ret.fireMultiplier}x Annual Expenses
+              </span>
+            </div>
+          </div>
+
+          {/* Donut Chart */}
+          {res.pieData && (
+            <DonutChart
+              data={res.pieData}
+              title="Corpus Funding Source (Savings vs Needed Accumulation)"
+              centerText={{
+                primary: `₹${(ret.requiredRetirementCorpus / 10000000).toFixed(2)} Cr`,
+                secondary: 'Corpus Goal',
+              }}
+            />
+          )}
+        </div>
+      );
+    }
+
     if (res.type === 'salary') {
       const sal = res.res;
       return (
@@ -691,6 +911,87 @@ export const CalculatorDetailView: React.FC<CalculatorDetailViewProps> = ({
           </div>
 
           <DonutChart data={res.pieData} title="Monthly Gross Salary Breakdown" />
+        </div>
+      );
+    }
+
+    if (res.type === 'gst') {
+      const g = res.res;
+      return (
+        <div className="flex flex-col gap-5">
+          {/* Main Hero Result Card */}
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white shadow-lg relative overflow-hidden">
+            <span className="text-xs font-bold uppercase tracking-wider text-blue-200 block mb-1">
+              {inputs.calculationType === 'inclusive' ? 'Net Base Price (Excl. GST)' : 'Total Invoice Amount (Incl. GST)'}
+            </span>
+            <div className="text-3xl sm:text-4xl font-black font-mono tracking-tight">
+              ₹{inputs.calculationType === 'inclusive' ? g.baseAmount.toLocaleString('en-IN') : g.totalAmount.toLocaleString('en-IN')}
+            </div>
+            <p className="text-xs text-blue-100 mt-2">
+              GST {inputs.calculationType === 'inclusive' ? 'Inclusive Extraction' : 'Exclusive Addition'} at {g.effectiveRate}% rate slab
+            </p>
+          </div>
+
+          {/* Key Metrics Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Net Base Amount</span>
+              <span className="text-base font-bold font-mono text-slate-900 dark:text-white">
+                ₹{g.baseAmount.toLocaleString('en-IN')}
+              </span>
+            </div>
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Total GST Tax</span>
+              <span className="text-base font-bold font-mono text-amber-600 dark:text-amber-400">
+                ₹{g.gstAmount.toLocaleString('en-IN')}
+              </span>
+            </div>
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs col-span-2 sm:col-span-1">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Gross Invoice Total</span>
+              <span className="text-base font-bold font-mono text-brand-600 dark:text-brand-400">
+                ₹{g.totalAmount.toLocaleString('en-IN')}
+              </span>
+            </div>
+          </div>
+
+          {/* Tax Invoice Split Breakdown Card */}
+          <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs flex flex-col gap-3">
+            <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+              Tax Invoicing Breakdown (Intra vs Inter-State)
+            </h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">CGST (Central Tax - {g.effectiveRate / 2}%)</span>
+                  <span className="font-mono font-bold text-xs text-slate-900 dark:text-white">₹{g.cgstAmount.toLocaleString('en-IN')}</span>
+                </div>
+                <div className="flex items-center justify-between pt-1 border-t border-slate-200/60 dark:border-slate-800/60">
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">SGST (State Tax - {g.effectiveRate / 2}%)</span>
+                  <span className="font-mono font-bold text-xs text-slate-900 dark:text-white">₹{g.sgstAmount.toLocaleString('en-IN')}</span>
+                </div>
+                <span className="text-[10px] text-slate-400 block mt-2">Applies to Intra-State Transactions</span>
+              </div>
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex flex-col justify-between">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">IGST (Integrated Tax - {g.effectiveRate}%)</span>
+                  <span className="font-mono font-bold text-xs text-brand-600 dark:text-brand-400">₹{g.gstAmount.toLocaleString('en-IN')}</span>
+                </div>
+                <span className="text-[10px] text-slate-400 block mt-2">Applies to Inter-State Transactions</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Donut Chart */}
+          {res.pieData && (
+            <DonutChart
+              data={res.pieData}
+              title="Invoice Price Composition"
+              centerText={{
+                primary: `₹${g.totalAmount.toLocaleString('en-IN')}`,
+                secondary: 'Total Invoice',
+              }}
+            />
+          )}
         </div>
       );
     }
@@ -768,6 +1069,223 @@ export const CalculatorDetailView: React.FC<CalculatorDetailViewProps> = ({
           )}
 
           <DistributionChart data={st.histogramBins} title="Data Frequency Distribution Histogram" />
+        </div>
+      );
+    }
+
+    if (res.type === 'binomial') {
+      const b = res.res;
+      return (
+        <div className="flex flex-col gap-5">
+          {/* Main Hero Result Card */}
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-700 text-white shadow-lg relative overflow-hidden">
+            <span className="text-xs font-bold uppercase tracking-wider text-violet-200 block mb-1">
+              Exact Probability P(X = {inputs.successes})
+            </span>
+            <div className="text-3xl sm:text-4xl font-black font-mono tracking-tight">
+              {(b.exactProbability * 100).toFixed(3)}%
+            </div>
+            <p className="text-xs text-violet-100 mt-2">
+              For exactly {inputs.successes} successes out of {inputs.trials} Bernoulli trials with success rate p = {inputs.probability}
+            </p>
+          </div>
+
+          {/* Key Metrics Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Cumulative P(X ≤ {inputs.successes})</span>
+              <span className="text-base font-bold font-mono text-brand-600 dark:text-brand-400">
+                {(b.cumulativeLessEqual * 100).toFixed(2)}%
+              </span>
+            </div>
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Cumulative P(X ≥ {inputs.successes})</span>
+              <span className="text-base font-bold font-mono text-purple-600 dark:text-purple-400">
+                {(b.cumulativeGreaterEqual * 100).toFixed(2)}%
+              </span>
+            </div>
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Expected Mean (μ = np)</span>
+              <span className="text-base font-bold font-mono text-slate-900 dark:text-white">
+                {b.mean}
+              </span>
+            </div>
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Standard Dev (σ)</span>
+              <span className="text-base font-bold font-mono text-amber-600 dark:text-amber-400">
+                {b.stdDev}
+              </span>
+            </div>
+          </div>
+
+          {/* Distribution Histogram Chart */}
+          {b.distributionChart && (
+            <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  Binomial Probability Distribution PMF
+                </h4>
+                <span className="text-[10px] font-mono text-slate-400">
+                  Highlighted: k = {inputs.successes}
+                </span>
+              </div>
+              <div style={{ width: '100%', height: 260 }}>
+                <ResponsiveContainer>
+                  <BarChart data={b.distributionChart.map((d: any) => ({ ...d, probPercent: Number((d.prob * 100).toFixed(3)) }))} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.2} vertical={false} />
+                    <XAxis dataKey="k" stroke="#94a3b8" fontSize={11} tickLine={false} label={{ value: 'Successes (k)', position: 'insideBottom', offset: -10, fill: '#94a3b8', fontSize: 10 }} />
+                    <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `${v}%`} />
+                    <Tooltip
+                      formatter={(val: any) => [`${val}%`, 'Probability']}
+                      labelFormatter={(label) => `k = ${label} successes`}
+                      contentStyle={{
+                        backgroundColor: '#0f172a',
+                        borderColor: '#334155',
+                        borderRadius: '0.75rem',
+                        color: '#fff',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                      }}
+                    />
+                    <Bar dataKey="probPercent" radius={[4, 4, 0, 0]}>
+                      {b.distributionChart.map((entry: any, idx: number) => (
+                        <Cell key={`bar-${idx}`} fill={entry.isExact ? '#d946ef' : '#6366f1'} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (res.type === 'regression') {
+      const reg = res.res;
+      return (
+        <div className="flex flex-col gap-5">
+          {/* Main Hero Result Card */}
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-indigo-600 via-brand-600 to-blue-600 text-white shadow-lg relative overflow-hidden">
+            <span className="text-xs font-bold uppercase tracking-wider text-indigo-200 block mb-1">
+              Fitted Regression Equation
+            </span>
+            <div className="text-3xl sm:text-4xl font-black font-mono tracking-tight">
+              {reg.equation}
+            </div>
+            <p className="text-xs text-indigo-100 mt-2">
+              For X = {inputs.predictX || 0} &rarr; Predicted <strong className="text-white">Y = {Number(res.predY).toFixed(3)}</strong> (from {reg.count} observation pairs)
+            </p>
+          </div>
+
+          {/* Key Metrics Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Predicted Y (at X={inputs.predictX})</span>
+              <span className="text-base font-bold font-mono text-brand-600 dark:text-brand-400">
+                {Number(res.predY).toFixed(3)}
+              </span>
+            </div>
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Pearson Correlation (r)</span>
+              <span className="text-base font-bold font-mono text-purple-600 dark:text-purple-400">
+                {reg.rValue.toFixed(4)}
+              </span>
+            </div>
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">R-Squared (R²)</span>
+              <span className="text-base font-bold font-mono text-emerald-600 dark:text-emerald-400">
+                {reg.rSquared.toFixed(4)}
+              </span>
+            </div>
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Slope (m) & Intercept (c)</span>
+              <span className="text-xs font-bold font-mono text-slate-900 dark:text-white block mt-0.5">
+                m={reg.slope.toFixed(3)}, c={reg.intercept.toFixed(3)}
+              </span>
+            </div>
+          </div>
+
+          {/* Scatter Chart Component */}
+          <ScatterRegressionChart
+            points={reg.points}
+            linePoints={reg.linePoints}
+            equation={reg.equation}
+            rSquared={reg.rSquared}
+          />
+        </div>
+      );
+    }
+
+    if (res.type === 'confidence') {
+      const conf = res.res;
+      return (
+        <div className="flex flex-col gap-5">
+          {/* Main Hero Result Card */}
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-sky-600 via-blue-600 to-indigo-700 text-white shadow-lg relative overflow-hidden">
+            <span className="text-xs font-bold uppercase tracking-wider text-sky-200 block mb-1">
+              {inputs.confidenceLevel}% Confidence Interval
+            </span>
+            <div className="text-3xl sm:text-4xl font-black font-mono tracking-tight">
+              {conf.intervalString}
+            </div>
+            <p className="text-xs text-sky-100 mt-2">
+              With {inputs.confidenceLevel}% confidence, the true population mean lies between <strong className="text-white">{conf.lowerBound}</strong> and <strong className="text-white">{conf.upperBound}</strong>
+            </p>
+          </div>
+
+          {/* Key Metrics Grid */}
+          <div className="grid grid-cols-3 gap-3">
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Margin of Error (±E)</span>
+              <span className="text-base font-bold font-mono text-brand-600 dark:text-brand-400">
+                ±{conf.marginOfError}
+              </span>
+            </div>
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Lower Bound</span>
+              <span className="text-base font-bold font-mono text-rose-600 dark:text-rose-400">
+                {conf.lowerBound}
+              </span>
+            </div>
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-1">Upper Bound</span>
+              <span className="text-base font-bold font-mono text-emerald-600 dark:text-emerald-400">
+                {conf.upperBound}
+              </span>
+            </div>
+          </div>
+
+          {/* Range Visualizer Card */}
+          <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                Sampling Distribution Range
+              </span>
+              <span className="text-xs font-mono font-bold text-slate-500">
+                Critical Z = {conf.criticalZ}
+              </span>
+            </div>
+
+            <div className="relative py-4">
+              <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-4 overflow-hidden relative flex items-center">
+                <div
+                  className="bg-gradient-to-r from-brand-500 to-indigo-600 h-full rounded-full transition-all mx-auto"
+                  style={{ width: '70%' }}
+                />
+              </div>
+              <div className="flex items-center justify-between text-xs font-mono font-bold text-slate-600 dark:text-slate-300 mt-2">
+                <span>Lower: {conf.lowerBound}</span>
+                <span className="text-brand-600 dark:text-brand-400">Sample Mean x̄ = {inputs.sampleMean}</span>
+                <span>Upper: {conf.upperBound}</span>
+              </div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-between">
+              <span>Standard Error (SE = s / √n): <strong className="text-slate-900 dark:text-white font-mono">{(Number(inputs.sampleStdDev) / Math.sqrt(Number(inputs.sampleSize))).toFixed(4)}</strong></span>
+              <span>Sample Size: <strong className="text-slate-900 dark:text-white font-mono">n = {inputs.sampleSize}</strong></span>
+            </div>
+          </div>
         </div>
       );
     }
@@ -884,6 +1402,90 @@ export const CalculatorDetailView: React.FC<CalculatorDetailViewProps> = ({
             <p className="text-xs text-teal-100 mt-2 font-mono">
               {uRes.formula}
             </p>
+          </div>
+        </div>
+      );
+    }
+
+    if (res.type === 'developer') {
+      return (
+        <div className="flex flex-col gap-5">
+          {/* Main Hero Header Card */}
+          <div className="p-6 rounded-2xl bg-slate-900 dark:bg-slate-950 text-white border border-slate-800 shadow-lg relative overflow-hidden">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-brand-400">
+                Developer Utility Console
+              </span>
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-black uppercase bg-brand-500/20 text-brand-300 border border-brand-500/30">
+                Mode: {res.mode}
+              </span>
+            </div>
+            <div className="text-xl sm:text-2xl font-bold font-display">
+              {res.mode === 'json' ? 'JSON Formatter & Validator' : res.mode === 'base64' ? 'Base64 Encoded Result' : res.mode === 'uuid' ? 'UUID v4 Generator' : 'Color Palette Inspector'}
+            </div>
+          </div>
+
+          {/* Color Preview Swatch if mode === 'color' */}
+          {res.mode === 'color' && res.colorDetails && (
+            <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs flex flex-col gap-4">
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                Color Preview Swatch
+              </span>
+              <div
+                className="w-full h-24 rounded-xl shadow-inner border border-black/10 flex items-center justify-center text-white font-mono font-bold text-lg drop-shadow"
+                style={{ backgroundColor: res.colorDetails.hex }}
+              >
+                {res.colorDetails.hex}
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-center text-xs font-mono">
+                <div className="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800">
+                  <span className="text-[10px] text-slate-400 block">HEX</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{res.colorDetails.hex}</span>
+                </div>
+                <div className="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800">
+                  <span className="text-[10px] text-slate-400 block">RGB</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{res.colorDetails.rgb}</span>
+                </div>
+                <div className="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800">
+                  <span className="text-[10px] text-slate-400 block">HSL</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{res.colorDetails.hsl}</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Output Code Block */}
+          <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                Output Result
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.clipboard.writeText(res.devOut);
+                  setCopiedText(true);
+                  setTimeout(() => setCopiedText(false), 2000);
+                }}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/60 dark:hover:bg-brand-900/60 text-brand-600 dark:text-brand-400 transition-colors cursor-pointer"
+              >
+                {copiedText ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-emerald-500" />
+                    <span className="text-emerald-600 dark:text-emerald-400">Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3.5 h-3.5" />
+                    <span>Copy Output</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            <pre className="p-4 rounded-xl bg-slate-950 text-slate-100 font-mono text-xs overflow-x-auto max-h-96 leading-relaxed border border-slate-800">
+              <code>{res.devOut}</code>
+            </pre>
           </div>
         </div>
       );
