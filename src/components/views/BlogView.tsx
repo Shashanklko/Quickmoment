@@ -12,7 +12,42 @@ interface BlogViewProps {
 }
 
 export const BlogView: React.FC<BlogViewProps> = ({ onSelectCalculator, onBack }) => {
-  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
+  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(() => {
+    const params = new URLSearchParams(window.location.search);
+    const postSlug = params.get('post');
+    if (postSlug) {
+      return BLOG_POSTS.find((p) => p.slug === postSlug || p.id === postSlug) || null;
+    }
+    return null;
+  });
+
+  const handleSelectPost = (post: BlogPost | null) => {
+    setSelectedPost(post);
+    const url = new URL(window.location.href);
+    if (post) {
+      url.searchParams.set('mode', 'blog');
+      url.searchParams.set('post', post.slug);
+    } else {
+      url.searchParams.set('mode', 'blog');
+      url.searchParams.delete('post');
+    }
+    window.history.pushState({}, '', url.toString());
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  React.useEffect(() => {
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const postSlug = params.get('post');
+      if (postSlug) {
+        setSelectedPost(BLOG_POSTS.find((p) => p.slug === postSlug || p.id === postSlug) || null);
+      } else {
+        setSelectedPost(null);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   if (selectedPost) {
     return (
@@ -21,7 +56,7 @@ export const BlogView: React.FC<BlogViewProps> = ({ onSelectCalculator, onBack }
         <div className="flex items-center justify-between gap-4 mb-8">
           <button
             type="button"
-            onClick={() => setSelectedPost(null)}
+            onClick={() => handleSelectPost(null)}
             className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -186,7 +221,7 @@ export const BlogView: React.FC<BlogViewProps> = ({ onSelectCalculator, onBack }
         {BLOG_POSTS.map((post) => (
           <div
             key={post.id}
-            onClick={() => setSelectedPost(post)}
+            onClick={() => handleSelectPost(post)}
             className="group rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 hover:border-brand-500/50 glow-card cursor-pointer transition-all overflow-hidden flex flex-col justify-between"
           >
             {post.imageUrl && (

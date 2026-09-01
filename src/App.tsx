@@ -24,6 +24,9 @@ export function App() {
     if (modeParam && ['newsroom', 'calculator', 'blog'].includes(modeParam)) {
       return modeParam;
     }
+    if (params.get('post')) {
+      return 'blog';
+    }
     const saved = localStorage.getItem('qm_mode') as AppMode;
     if (saved && ['newsroom', 'calculator', 'blog'].includes(saved)) {
       return saved;
@@ -108,6 +111,8 @@ export function App() {
 
       if (mode && ['newsroom', 'calculator', 'blog'].includes(mode)) {
         setCurrentMode(mode);
+      } else if (params.has('post')) {
+        setCurrentMode('blog');
       } else if (calc || cat || view) {
         setCurrentMode('calculator');
       }
