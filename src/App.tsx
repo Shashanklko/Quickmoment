@@ -16,9 +16,29 @@ import { ModeSelectorModal } from './components/common/ModeSelectorModal';
 import { CALCULATORS_REGISTRY } from './data/calculatorsRegistry';
 import { AppMode } from './types';
 
+const SLUG_ALIASES: Record<string, string> = {
+  'bmi-calculator': 'bmi-calorie-calculator',
+  'descriptive-statistics': 'descriptive-statistics-calculator',
+  'binomial-distribution': 'binomial-distribution-calculator',
+  'linear-regression': 'linear-regression-calculator',
+  'confidence-interval': 'confidence-interval-calculator',
+  'monte-carlo-pi': 'monte-carlo-pi-simulator',
+  'monte-carlo-investment': 'monte-carlo-investment-simulator',
+  'unit-converter': 'universal-unit-converter',
+  'developer-tools': 'developer-tools-suite',
+};
+
+const resolveCalcSlug = (slug: string) => {
+  return SLUG_ALIASES[slug] || slug;
+};
+
 export function App() {
   // 3-Mode state ('newsroom' | 'calculator' | 'blog')
   const [currentMode, setCurrentMode] = useState<AppMode>(() => {
+    const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
+    if (pathname === '/newsroom') return 'newsroom';
+    if (pathname === '/blog' || pathname.startsWith('/blog/')) return 'blog';
+    
     const params = new URLSearchParams(window.location.search);
     const modeParam = params.get('mode') as AppMode;
     if (modeParam && ['newsroom', 'calculator', 'blog'].includes(modeParam)) {
@@ -72,15 +92,13 @@ export function App() {
     localStorage.setItem('qm_mode', mode);
     localStorage.setItem('qm_has_seen_mode_popup', 'true');
 
-    const url = new URL(window.location.href);
+    let newPath = '/';
     if (mode === 'newsroom') {
-      url.search = '?mode=newsroom';
+      newPath = '/newsroom';
     } else if (mode === 'blog') {
-      url.search = '?mode=blog';
-    } else {
-      url.search = '';
+      newPath = '/blog';
     }
-    window.history.pushState({}, '', url.toString());
+    window.history.pushState({}, '', newPath);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -103,38 +121,105 @@ export function App() {
   // Handle URL parsing on mount and popstate
   useEffect(() => {
     const parseUrl = () => {
+      const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
       const params = new URLSearchParams(window.location.search);
-      const mode = params.get('mode') as AppMode;
-      const calc = params.get('calc');
-      const cat = params.get('cat');
-      const view = params.get('view');
 
-      if (mode && ['newsroom', 'calculator', 'blog'].includes(mode)) {
-        setCurrentMode(mode);
-      } else if (params.has('post')) {
+      if (pathname === '/newsroom') {
+        setCurrentMode('newsroom');
+      } else if (pathname === '/blog' || pathname.startsWith('/blog/')) {
         setCurrentMode('blog');
-      } else if (calc || cat || view) {
+      } else if (pathname.startsWith('/calculators/')) {
+        const rawSlug = pathname.replace('/calculators/', '');
+        const cleanSlug = resolveCalcSlug(rawSlug);
+        setSelectedCalcSlug(cleanSlug);
+        setCurrentView('calculator');
         setCurrentMode('calculator');
+      } else if (pathname.startsWith('/statistics/')) {
+        const rawSlug = pathname.replace('/statistics/', '');
+        const cleanSlug = resolveCalcSlug(rawSlug);
+        setSelectedCalcSlug(cleanSlug);
+        setCurrentView('calculator');
+        setCurrentMode('calculator');
+      } else if (pathname === '/statistics' || pathname === '/quickstats') {
+        setCurrentView('quickstats');
+        setCurrentMode('calculator');
+      } else if (pathname.startsWith('/simulations/')) {
+        const rawSlug = pathname.replace('/simulations/', '');
+        const cleanSlug = resolveCalcSlug(rawSlug);
+        setSelectedCalcSlug(cleanSlug);
+        setCurrentView('calculator');
+        setCurrentMode('calculator');
+      } else if (pathname === '/simulations') {
+        setCurrentView('simulations');
+        setCurrentMode('calculator');
+      } else if (pathname.startsWith('/converters/')) {
+        const rawSlug = pathname.replace('/converters/', '');
+        const cleanSlug = resolveCalcSlug(rawSlug);
+        setSelectedCalcSlug(cleanSlug);
+        setCurrentView('calculator');
+        setCurrentMode('calculator');
+      } else if (pathname === '/converters') {
+        setSelectedCategorySlug('converters');
+        setCurrentView('category');
+        setCurrentMode('calculator');
+      } else if (pathname.startsWith('/developer/')) {
+        const rawSlug = pathname.replace('/developer/', '');
+        const cleanSlug = resolveCalcSlug(rawSlug);
+        setSelectedCalcSlug(cleanSlug);
+        setCurrentView('calculator');
+        setCurrentMode('calculator');
+      } else if (pathname === '/developer') {
+        setSelectedCategorySlug('developer');
+        setCurrentView('category');
+        setCurrentMode('calculator');
+      } else if (pathname.startsWith('/category/')) {
+        const catSlug = pathname.replace('/category/', '');
+        setSelectedCategorySlug(catSlug);
+        setCurrentView('category');
+        setCurrentMode('calculator');
+      } else if (pathname === '/arcade') {
+        setCurrentView('arcade');
+        setCurrentMode('calculator');
+      } else if (pathname === '/favorites') {
+        setCurrentView('favorites');
+        setCurrentMode('calculator');
+      } else if (pathname === '/admin') {
+        setCurrentView('admin');
+        setCurrentMode('calculator');
+      } else {
+        // Fallback to query parameters
+        const mode = params.get('mode') as AppMode;
+        const calc = params.get('calc');
+        const cat = params.get('cat');
+        const view = params.get('view');
+
+        if (mode && ['newsroom', 'calculator', 'blog'].includes(mode)) {
+          setCurrentMode(mode);
+        } else if (params.has('post')) {
+          setCurrentMode('blog');
+        } else if (calc || cat || view) {
+          setCurrentMode('calculator');
+        }
+
+        if (calc) {
+          setSelectedCalcSlug(resolveCalcSlug(calc));
+          setCurrentView('calculator');
+        } else if (cat) {
+          setSelectedCategorySlug(cat);
+          setCurrentView('category');
+        } else if (view) {
+          setCurrentView(view);
+        }
       }
 
       const customParams: Record<string, any> = {};
       params.forEach((val, key) => {
-        if (!['calc', 'cat', 'view', 'mode'].includes(key)) {
+        if (!['calc', 'cat', 'view', 'mode', 'post'].includes(key)) {
           const num = Number(val);
           customParams[key] = !isNaN(num) && val.trim() !== '' ? num : val;
         }
       });
       setUrlParams(customParams);
-
-      if (calc) {
-        setSelectedCalcSlug(calc);
-        setCurrentView('calculator');
-      } else if (cat) {
-        setSelectedCategorySlug(cat);
-        setCurrentView('category');
-      } else if (view) {
-        setCurrentView(view);
-      }
     };
 
     parseUrl();
@@ -158,20 +243,45 @@ export function App() {
   const handleNavigate = (view: string, slug?: string) => {
     setCurrentMode('calculator');
     setCurrentView(view);
-    const url = new URL(window.location.href);
-    url.search = '';
+    let newPath = '/';
 
     if (view === 'calculator' && slug) {
-      setSelectedCalcSlug(slug);
-      url.searchParams.set('calc', slug);
+      const cleanSlug = resolveCalcSlug(slug);
+      setSelectedCalcSlug(cleanSlug);
+      const calcMeta = CALCULATORS_REGISTRY.find((c) => c.slug === cleanSlug || c.slug === slug);
+      if (calcMeta?.category === 'statistics') {
+        newPath = `/statistics/${slug.replace('-calculator', '')}`;
+      } else if (calcMeta?.category === 'simulation') {
+        newPath = `/simulations/${slug.replace('-simulator', '')}`;
+      } else if (calcMeta?.category === 'conversion') {
+        newPath = '/converters/unit-converter';
+      } else if (calcMeta?.category === 'developer') {
+        newPath = '/developer/developer-tools';
+      } else {
+        newPath = `/calculators/${slug}`;
+      }
     } else if (view === 'category' && slug) {
       setSelectedCategorySlug(slug);
-      url.searchParams.set('cat', slug);
-    } else if (view !== 'home') {
-      url.searchParams.set('view', view);
+      if (slug === 'converters') {
+        newPath = '/converters';
+      } else if (slug === 'developer') {
+        newPath = '/developer';
+      } else {
+        newPath = `/category/${slug}`;
+      }
+    } else if (view === 'quickstats') {
+      newPath = '/statistics';
+    } else if (view === 'simulations') {
+      newPath = '/simulations';
+    } else if (view === 'arcade') {
+      newPath = '/arcade';
+    } else if (view === 'favorites') {
+      newPath = '/favorites';
+    } else if (view === 'admin') {
+      newPath = '/admin';
     }
 
-    window.history.pushState({}, '', url.toString());
+    window.history.pushState({}, '', newPath);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

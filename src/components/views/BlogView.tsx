@@ -13,6 +13,12 @@ interface BlogViewProps {
 
 export const BlogView: React.FC<BlogViewProps> = ({ onSelectCalculator, onBack }) => {
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(() => {
+    const pathname = window.location.pathname.replace(/\/+$/, '');
+    if (pathname.startsWith('/blog/')) {
+      const postSlug = pathname.replace('/blog/', '');
+      const found = BLOG_POSTS.find((p) => p.slug === postSlug || p.id === postSlug);
+      if (found) return found;
+    }
     const params = new URLSearchParams(window.location.search);
     const postSlug = params.get('post');
     if (postSlug) {
@@ -23,20 +29,25 @@ export const BlogView: React.FC<BlogViewProps> = ({ onSelectCalculator, onBack }
 
   const handleSelectPost = (post: BlogPost | null) => {
     setSelectedPost(post);
-    const url = new URL(window.location.href);
     if (post) {
-      url.searchParams.set('mode', 'blog');
-      url.searchParams.set('post', post.slug);
+      window.history.pushState({}, '', `/blog/${post.slug}`);
     } else {
-      url.searchParams.set('mode', 'blog');
-      url.searchParams.delete('post');
+      window.history.pushState({}, '', '/blog');
     }
-    window.history.pushState({}, '', url.toString());
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   React.useEffect(() => {
     const handlePopState = () => {
+      const pathname = window.location.pathname.replace(/\/+$/, '');
+      if (pathname.startsWith('/blog/')) {
+        const postSlug = pathname.replace('/blog/', '');
+        const found = BLOG_POSTS.find((p) => p.slug === postSlug || p.id === postSlug);
+        if (found) {
+          setSelectedPost(found);
+          return;
+        }
+      }
       const params = new URLSearchParams(window.location.search);
       const postSlug = params.get('post');
       if (postSlug) {
