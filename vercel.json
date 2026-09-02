@@ -1,9 +1,47 @@
 {
   "version": 2,
+  "cleanUrls": false,
+  "trailingSlash": false,
   "rewrites": [
     {
       "source": "/api/yahoo/(.*)",
       "destination": "https://query1.finance.yahoo.com/$1"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/sitemap.xml"
+    },
+    {
+      "source": "/sitemap-news.xml",
+      "destination": "/sitemap-news.xml"
+    },
+    {
+      "source": "/sitemap-blogs.xml",
+      "destination": "/sitemap-blogs.xml"
+    },
+    {
+      "source": "/sitemap-calculators.xml",
+      "destination": "/sitemap-calculators.xml"
+    },
+    {
+      "source": "/robots.txt",
+      "destination": "/robots.txt"
+    },
+    {
+      "source": "/llms.txt",
+      "destination": "/llms.txt"
+    },
+    {
+      "source": "/llms-full.txt",
+      "destination": "/llms-full.txt"
+    },
+    {
+      "source": "/ads.txt",
+      "destination": "/ads.txt"
+    },
+    {
+      "source": "/((?!api/|.*\\.(?:xml|txt|json|png|jpg|jpeg|svg|ico|webp|js|css)$).*)",
+      "destination": "/index.html"
     },
     {
       "source": "/(.*)",
@@ -21,15 +59,19 @@
       ]
     },
     {
-      "source": "/sitemap.xml",
+      "source": "/sitemap(.*)\\.xml",
       "headers": [
         {
           "key": "Content-Type",
           "value": "application/xml; charset=utf-8"
         },
         {
+          "key": "X-Robots-Tag",
+          "value": "all"
+        },
+        {
           "key": "Cache-Control",
-          "value": "public, max-age=86400, stale-while-revalidate=3600"
+          "value": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400"
         }
       ]
     },
@@ -39,6 +81,27 @@
         {
           "key": "Content-Type",
           "value": "text/plain; charset=utf-8"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "all"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    },
+    {
+      "source": "/llms(.*)\\.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "all"
         },
         {
           "key": "Cache-Control",

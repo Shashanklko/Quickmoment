@@ -10,15 +10,22 @@
     <meta name="title" content="QuickMoments — Precision Calculators, Live NewsRoom & Research Journal" />
     <meta
       name="description"
-      content="QuickMoments is a modern high-precision computation platform featuring 15+ financial & tax calculators, 100k-trial Monte Carlo simulations, live Economic Times & Yahoo Finance newsroom, and peer-reviewed research blogs."
+      content="QuickMoments is a precision computation and financial intelligence platform featuring 15+ banking calculators, 100k-trial Monte Carlo simulations, live Economic Times & Yahoo Finance newsroom, and peer-reviewed research blogs."
     />
     <meta
       name="keywords"
-      content="QuickMoments, EMI Calculator, SIP Calculator, Income Tax FY 2025-26, Rent vs Buy, Monte Carlo Simulation, BMI TDEE Calculator, NIFTY 50 Live, SENSEX, Stock Market News, Economic Times RSS, Probability Paradox, Financial Advisory"
+      content="QuickMoments, The Economic Times News Live, EMI Calculator, SIP Calculator, Stock Market News India, NIFTY 50 Live, SENSEX, Income Tax FY 2025-26, Rent vs Buy, Monte Carlo Simulation, BMI TDEE Calculator, Probability Paradox, Financial Advisory, Tech News India"
     />
     <meta name="author" content="QuickMoments Intelligence Team" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="ai-content-declaration" content="human-curated, algorithmic precision, verified live financial feeds" />
     <link rel="canonical" href="https://www.quickmoment.fun/" />
+
+    <!-- AI & LLM Discovery Standards -->
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Context Index" />
+    <link rel="alternate" type="text/plain" href="/llms-full.txt" title="LLM Full Knowledge Base" />
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
+    <link rel="sitemap" type="application/xml" title="Google News Sitemap" href="/sitemap-news.xml" />
 
     <!-- Google AdSense -->
     <script
@@ -48,7 +55,7 @@
     <meta property="og:title" content="QuickMoments — Precision Calculators, Live NewsRoom & Research Journal" />
     <meta
       property="og:description"
-      content="High-precision financial engines, live market news feeds from Economic Times & Yahoo Finance, Monte Carlo simulations, and long-form math guides."
+      content="High-precision financial engines, live market news feeds from The Economic Times & Yahoo Finance, Monte Carlo simulations, and long-form math guides."
     />
     <meta property="og:image" content="https://www.quickmoment.fun/og-preview.png" />
     <meta property="og:site_name" content="QuickMoments" />
@@ -84,7 +91,7 @@
             "url": "https://www.quickmoment.fun/",
             "applicationCategory": "FinanceApplication, BusinessApplication, EducationalApplication",
             "operatingSystem": "All",
-            "description": "Multi-mode precision calculation platform featuring financial modeling, Monte Carlo simulators, live market news, and research blogs.",
+            "description": "Multi-mode precision calculation platform featuring financial modeling, Monte Carlo simulators, live market news from The Economic Times, and research blogs.",
             "offers": {
               "@type": "Offer",
               "price": "0",
@@ -92,11 +99,23 @@
             }
           },
           {
-            "@type": "Organization",
+            "@type": "NewsMediaOrganization",
             "@id": "https://www.quickmoment.fun/#organization",
-            "name": "QuickMoments",
+            "name": "QuickMoments Intelligence",
             "url": "https://www.quickmoment.fun/",
-            "logo": "https://www.quickmoment.fun/favicon.png"
+            "logo": "https://www.quickmoment.fun/favicon.png",
+            "publishingPrinciples": "https://www.quickmoment.fun/blog"
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://www.quickmoment.fun/#website",
+            "url": "https://www.quickmoment.fun/",
+            "name": "QuickMoments",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://www.quickmoment.fun/?search={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
           },
           {
             "@type": "FAQPage",
@@ -107,7 +126,15 @@
                 "name": "What is QuickMoments and what makes its calculation engines unique?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "QuickMoments (quickmoment.fun) is an advanced multi-mode computational platform combining 15+ high-precision financial, statistical, tax, and health engines with real-time market intelligence and academic research journals. All math formulas are audited against institutional banking standards."
+                  "text": "QuickMoments (quickmoment.fun) is an advanced multi-mode computational platform combining 15+ high-precision financial, statistical, tax, and health engines with real-time market intelligence from The Economic Times and academic research journals. All math formulas are audited against institutional banking standards."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does QuickMoments provide live stock market and economic news?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. QuickMoments features a real-time NewsRoom powered by The Economic Times RSS feeds and Yahoo Finance live market quotes across Technology, Stock Markets (NIFTY/SENSEX), Economy, Direct Tax Policy, and Global Geopolitics."
                 }
               },
               {
@@ -124,14 +151,6 @@
                 "acceptedAnswer": {
                   "@type": "Answer",
                   "text": "Our EMI calculations use the standardized reducing-balance compounding formula with full amortization schedules. Our Income Tax Calculator incorporates the latest Union Budget FY 2025-26 slabs, comparing New vs Old regimes with exact Standard Deductions."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How does the BMI, BMR and TDEE Health Calculator compute my daily targets?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Our health suite uses the clinical Mifflin-St Jeor formula for BMR and applies physical activity multipliers for TDEE. If Body Fat % is provided, it unlocks the Katch-McArdle formula, supporting both Metric (cm, kg) and US Imperial (ft/in, lbs) units."
                 }
               }
             ]

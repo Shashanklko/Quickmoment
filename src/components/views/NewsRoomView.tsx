@@ -6,6 +6,7 @@ import { AffiliateBanner } from '../common/AffiliateBanner';
 import { LiveTickerTape } from '../common/LiveTickerTape';
 import { InvestorAwarenessCard } from '../common/InvestorAwarenessCard';
 import { fetchLiveRssByCategory, RSS_NEWS_CONFIGS } from '../../services/liveRssNewsService';
+import { updatePageSeo, SEO_PRESETS } from '../../services/seoService';
 import {
   Newspaper,
   TrendingUp,
@@ -23,6 +24,7 @@ import {
   RefreshCw,
   Radio,
   Check,
+  Bot,
 } from 'lucide-react';
 
 interface NewsRoomViewProps {
@@ -38,6 +40,11 @@ export const NewsRoomView: React.FC<NewsRoomViewProps> = ({ onNavigateToCalculat
   const [rssCache, setRssCache] = useState<Record<string, NewsArticle[]>>({});
   const [isLoadingRss, setIsLoadingRss] = useState<boolean>(false);
   const [copiedToast, setCopiedToast] = useState<string | null>(null);
+
+  // Sync Dynamic SEO metadata for NewsRoom
+  useEffect(() => {
+    updatePageSeo(SEO_PRESETS.newsroom(selectedCategory));
+  }, [selectedCategory]);
 
   // Load live RSS feed when category changes
   const loadCategoryNews = useCallback(async (cat: NewsCategory, force: boolean = false) => {
@@ -126,6 +133,20 @@ export const NewsRoomView: React.FC<NewsRoomViewProps> = ({ onNavigateToCalculat
     }
   };
 
+  // Copy formatted AI Search Citation Handler (ChatGPT / Perplexity / Gemini)
+  const handleCopyForAi = async (article: NewsArticle, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    const citationText = `📌 "${article.title}"\n\n${article.summary}\n\n📰 Source: ${article.source} | QuickMoments Intelligence\n🔗 Link: ${article.sourceUrl || 'https://www.quickmoment.fun/newsroom'}\n⚡ Powered by QuickMoments Computational Intelligence: https://www.quickmoment.fun/`;
+
+    try {
+      await navigator.clipboard.writeText(citationText);
+      setCopiedToast(`Copied AI citation format for ChatGPT / Perplexity!`);
+      setTimeout(() => setCopiedToast(null), 3500);
+    } catch {
+      //
+    }
+  };
+
   // Social Share & Clipboard Copy Handler
   const handleShare = async (article: NewsArticle, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
@@ -154,26 +175,26 @@ export const NewsRoomView: React.FC<NewsRoomViewProps> = ({ onNavigateToCalculat
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 animate-fade-in">
+    <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-16 animate-fade-in">
       {/* 1. Yahoo Finance 8-Item Live Ticker Tape (2-Hour Auto Sync) */}
       <LiveTickerTape className="mb-6" />
 
       {/* 2. NewsRoom Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 sm:mb-8">
         <div>
           <div className="flex items-center gap-2 mb-1.5">
-            <span className="p-1.5 rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/30 inline-flex items-center">
-              <Radio className="w-4 h-4 animate-pulse" />
+            <span className="p-1 sm:p-1.5 rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/30 inline-flex items-center">
+              <Radio className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-pulse" />
             </span>
-            <span className="text-[11px] font-black uppercase tracking-widest text-blue-500 dark:text-blue-400">
-              Live Intelligence & Economic Times RSS
+            <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-blue-500 dark:text-blue-400">
+              Live Intelligence & The Economic Times RSS
             </span>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-black font-display text-slate-900 dark:text-white tracking-tight">
+          <h1 className="text-xl sm:text-3xl lg:text-4xl font-black font-display text-slate-900 dark:text-white tracking-tight">
             Curated Global & Economic Feeds
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Real-time feeds from The Economic Times & Google News across 5 core divisions.
+            Real-time feeds from The Economic Times & Yahoo Finance across 5 core divisions.
           </p>
         </div>
 
@@ -186,7 +207,7 @@ export const NewsRoomView: React.FC<NewsRoomViewProps> = ({ onNavigateToCalculat
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search news, topics, tags..."
-              className="w-full pl-9 pr-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 shadow-xs"
+              className="w-full pl-9 pr-8 py-2 sm:py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 shadow-xs"
             />
             {searchQuery && (
               <button
@@ -210,7 +231,7 @@ export const NewsRoomView: React.FC<NewsRoomViewProps> = ({ onNavigateToCalculat
               }
             }}
             disabled={isLoadingRss}
-            className="p-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 transition-colors cursor-pointer"
+            className="p-2 sm:p-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 transition-colors cursor-pointer shrink-0"
             title="Refresh Live RSS Feed from Economic Times"
           >
             <RefreshCw className={`w-4 h-4 ${isLoadingRss ? 'animate-spin text-blue-500' : ''}`} />
@@ -219,11 +240,11 @@ export const NewsRoomView: React.FC<NewsRoomViewProps> = ({ onNavigateToCalculat
       </div>
 
       {/* 3. 5-Division Category Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-6 scrollbar-none border-b border-slate-200 dark:border-slate-800">
+      <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-3 mb-6 scrollbar-none border-b border-slate-200 dark:border-slate-800">
         <button
           type="button"
           onClick={() => setSelectedCategory('all')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
+          className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
             selectedCategory === 'all'
               ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-sm'
               : 'bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -244,7 +265,7 @@ export const NewsRoomView: React.FC<NewsRoomViewProps> = ({ onNavigateToCalculat
               key={cat.id}
               type="button"
               onClick={() => setSelectedCategory(cat.id)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
                 isSelected
                   ? 'bg-blue-600 text-white shadow-sm'
                   : 'bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -259,14 +280,14 @@ export const NewsRoomView: React.FC<NewsRoomViewProps> = ({ onNavigateToCalculat
       </div>
 
       {/* 4. 2-Column Main Layout: Feed (Left 8 cols) + Sticky Side Deals & Awareness Video (Right 4 cols) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
         {/* Main News Feed Column */}
         <div className="lg:col-span-8 flex flex-col gap-6">
           {/* Featured Breaking Hero Card */}
           {heroArticle && (
             <div
               onClick={() => setActiveArticle(heroArticle)}
-              className="group p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950 border border-slate-800 hover:border-blue-500/80 transition-all cursor-pointer shadow-xl relative overflow-hidden"
+              className="group p-5 sm:p-8 rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950 border border-slate-800 hover:border-blue-500/80 transition-all cursor-pointer shadow-xl relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -279,11 +300,20 @@ export const NewsRoomView: React.FC<NewsRoomViewProps> = ({ onNavigateToCalculat
                     {heroArticle.source}
                   </span>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                   <span className="text-[11px] text-slate-400 flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     {heroArticle.publishedAt}
                   </span>
+                  <button
+                    type="button"
+                    onClick={(e) => handleCopyForAi(heroArticle, e)}
+                    className="p-1.5 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 transition-colors cursor-pointer flex items-center gap-1 text-[10px] font-bold"
+                    title="Copy briefing & citation format for ChatGPT / Perplexity"
+                  >
+                    <Bot className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Cite in AI</span>
+                  </button>
                   <button
                     type="button"
                     onClick={(e) => handleShare(heroArticle, e)}
@@ -295,7 +325,7 @@ export const NewsRoomView: React.FC<NewsRoomViewProps> = ({ onNavigateToCalculat
                 </div>
               </div>
 
-              <h2 className="text-xl sm:text-2xl font-black font-display text-white group-hover:text-blue-300 transition-colors mb-3 leading-snug">
+              <h2 className="text-lg sm:text-2xl font-black font-display text-white group-hover:text-blue-300 transition-colors mb-3 leading-snug">
                 {heroArticle.title}
               </h2>
 
@@ -328,14 +358,14 @@ export const NewsRoomView: React.FC<NewsRoomViewProps> = ({ onNavigateToCalculat
               <div
                 key={article.id}
                 onClick={() => setActiveArticle(article)}
-                className="group p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 hover:border-blue-500/50 glow-card transition-all cursor-pointer flex flex-col justify-between"
+                className="group p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 hover:border-blue-500/50 glow-card transition-all cursor-pointer flex flex-col justify-between shadow-xs hover:shadow-md"
               >
                 <div>
                   <div className="flex items-center justify-between text-[11px] font-semibold text-slate-400 mb-2">
-                    <span className="text-blue-600 dark:text-blue-400 font-bold">
+                    <span className="text-blue-600 dark:text-blue-400 font-bold truncate max-w-[180px]">
                       {article.source}
                     </span>
-                    <span>{article.publishedAt}</span>
+                    <span className="shrink-0">{article.publishedAt}</span>
                   </div>
 
                   <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 leading-snug mb-2">
@@ -348,11 +378,19 @@ export const NewsRoomView: React.FC<NewsRoomViewProps> = ({ onNavigateToCalculat
                 </div>
 
                 <div className="pt-3 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5">
                     <div className="flex items-center gap-1 text-[10px] font-semibold text-slate-400">
                       <Clock className="w-3 h-3" />
                       <span>{article.readTime}</span>
                     </div>
+                    <button
+                      type="button"
+                      onClick={(e) => handleCopyForAi(article, e)}
+                      className="p-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors cursor-pointer"
+                      title="Copy briefing for AI / ChatGPT citation"
+                    >
+                      <Bot className="w-3.5 h-3.5" />
+                    </button>
                     <button
                       type="button"
                       onClick={(e) => handleShare(article, e)}
@@ -376,7 +414,7 @@ export const NewsRoomView: React.FC<NewsRoomViewProps> = ({ onNavigateToCalculat
         </div>
 
         {/* Sticky Side Column: Investor Awareness Video Series + Amazon Product Snapshots Rail */}
-        <div className="lg:col-span-4 sticky top-24 self-start flex flex-col gap-6">
+        <div className="lg:col-span-4 sticky top-20 sm:top-24 self-start flex flex-col gap-6">
           {/* Investor Awareness Video Episode Series Carousel */}
           <InvestorAwarenessCard />
 
@@ -387,18 +425,18 @@ export const NewsRoomView: React.FC<NewsRoomViewProps> = ({ onNavigateToCalculat
 
       {/* 5. Article Reader Modal / Drawer */}
       {activeArticle && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in overflow-y-auto">
-          <div className="relative w-full max-w-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl my-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in overflow-y-auto">
+          <div className="relative w-full max-w-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-8 shadow-2xl my-8">
             <button
               type="button"
               onClick={() => setActiveArticle(null)}
-              className="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
             {/* Header info */}
-            <div className="flex items-center gap-2 text-xs font-semibold text-blue-600 dark:text-blue-400 mb-3">
+            <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-blue-600 dark:text-blue-400 mb-3 pr-10">
               <span className="px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200/60 dark:border-blue-800/60 font-bold">
                 {activeArticle.category.toUpperCase()}
               </span>
@@ -408,11 +446,11 @@ export const NewsRoomView: React.FC<NewsRoomViewProps> = ({ onNavigateToCalculat
               <span className="text-slate-400">{activeArticle.publishedAt}</span>
             </div>
 
-            <h2 className="text-xl sm:text-2xl font-black font-display text-slate-900 dark:text-white mb-4 leading-snug">
+            <h2 className="text-lg sm:text-2xl font-black font-display text-slate-900 dark:text-white mb-4 leading-snug">
               {activeArticle.title}
             </h2>
 
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800/60 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 mb-6 italic">
+            <div className="p-3 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800/60 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 mb-5 italic">
               &ldquo;{activeArticle.summary}&rdquo;
             </div>
 
@@ -437,6 +475,16 @@ export const NewsRoomView: React.FC<NewsRoomViewProps> = ({ onNavigateToCalculat
               <div className="flex items-center gap-2">
                 <button
                   type="button"
+                  onClick={() => handleCopyForAi(activeArticle)}
+                  className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-600 dark:text-blue-300 text-xs font-semibold inline-flex items-center gap-1.5 transition-colors cursor-pointer border border-blue-200/50 dark:border-blue-800/50"
+                  title="Copy briefing for AI / ChatGPT citation"
+                >
+                  <Bot className="w-3.5 h-3.5" />
+                  <span>Cite in AI</span>
+                </button>
+
+                <button
+                  type="button"
                   onClick={() => handleShare(activeArticle)}
                   className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold inline-flex items-center gap-1.5 transition-colors cursor-pointer"
                   title="Share story"
@@ -449,7 +497,7 @@ export const NewsRoomView: React.FC<NewsRoomViewProps> = ({ onNavigateToCalculat
                   href={activeArticle.sourceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 transition-colors inline-flex items-center gap-1.5 shadow-sm"
+                  className="px-3 sm:px-4 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 transition-colors inline-flex items-center gap-1.5 shadow-sm"
                 >
                   <span>View on {activeArticle.source.split(' ')[0] || 'Economic Times'}</span>
                   <ExternalLink className="w-3.5 h-3.5" />
@@ -470,3 +518,4 @@ export const NewsRoomView: React.FC<NewsRoomViewProps> = ({ onNavigateToCalculat
     </div>
   );
 };
+

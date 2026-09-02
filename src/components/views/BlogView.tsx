@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BLOG_POSTS } from '../../data/blogPosts';
 import { BlogPost } from '../../types';
 import { MarkdownRenderer } from '../common/MarkdownRenderer';
 import { AffiliateBanner } from '../common/AffiliateBanner';
 import { SideDealsRail } from '../common/SideDealsRail';
+import { updatePageSeo, SEO_PRESETS } from '../../services/seoService';
 import { BookOpen, Clock, ArrowRight, ArrowLeft, ExternalLink, Bookmark, Share2 } from 'lucide-react';
 
 interface BlogViewProps {
@@ -27,6 +28,15 @@ export const BlogView: React.FC<BlogViewProps> = ({ onSelectCalculator, onBack }
     return null;
   });
 
+  // Dynamic SEO Synchronization
+  useEffect(() => {
+    if (selectedPost) {
+      updatePageSeo(SEO_PRESETS.blogPost(selectedPost));
+    } else {
+      updatePageSeo(SEO_PRESETS.blogHub());
+    }
+  }, [selectedPost]);
+
   const handleSelectPost = (post: BlogPost | null) => {
     setSelectedPost(post);
     if (post) {
@@ -37,7 +47,7 @@ export const BlogView: React.FC<BlogViewProps> = ({ onSelectCalculator, onBack }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handlePopState = () => {
       const pathname = window.location.pathname.replace(/\/+$/, '');
       if (pathname.startsWith('/blog/')) {

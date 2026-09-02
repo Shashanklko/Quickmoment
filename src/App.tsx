@@ -14,6 +14,7 @@ import { NewsRoomView } from './components/views/NewsRoomView';
 import { SearchModal } from './components/common/SearchModal';
 import { ModeSelectorModal } from './components/common/ModeSelectorModal';
 import { CALCULATORS_REGISTRY } from './data/calculatorsRegistry';
+import { updatePageSeo, SEO_PRESETS } from './services/seoService';
 import { AppMode } from './types';
 
 const SLUG_ALIASES: Record<string, string> = {
@@ -294,6 +295,39 @@ export function App() {
 
   const activeCalculator =
     CALCULATORS_REGISTRY.find((c) => c.slug === selectedCalcSlug) || CALCULATORS_REGISTRY[0];
+
+  // Dynamic SEO Synchronization across Calculator Studio Views
+  useEffect(() => {
+    if (currentMode === 'calculator') {
+      if (currentView === 'home') {
+        updatePageSeo(SEO_PRESETS.home());
+      } else if (currentView === 'calculator' && activeCalculator) {
+        updatePageSeo(SEO_PRESETS.calculator(activeCalculator));
+      } else if (currentView === 'simulations') {
+        updatePageSeo(SEO_PRESETS.simulations());
+      } else if (currentView === 'quickstats') {
+        updatePageSeo(SEO_PRESETS.statistics());
+      } else if (currentView === 'arcade') {
+        updatePageSeo({
+          title: 'Games & Financial Probability Arcade — QuickMoments',
+          description: 'Play probability games, Monty Hall paradox simulator, and interactive math challenges.',
+          canonicalPath: '/arcade',
+        });
+      } else if (currentView === 'favorites') {
+        updatePageSeo({
+          title: 'Saved Favorite Calculators — QuickMoments',
+          description: 'Your personalized collection of bookmarked precision calculators and tools.',
+          canonicalPath: '/favorites',
+        });
+      } else if (currentView === 'category') {
+        updatePageSeo({
+          title: `${selectedCategorySlug.charAt(0).toUpperCase() + selectedCategorySlug.slice(1)} Precision Calculators — QuickMoments`,
+          description: `High-precision online tools and calculators for ${selectedCategorySlug}.`,
+          canonicalPath: `/category/${selectedCategorySlug}`,
+        });
+      }
+    }
+  }, [currentMode, currentView, selectedCalcSlug, selectedCategorySlug, activeCalculator]);
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 transition-colors duration-200">
