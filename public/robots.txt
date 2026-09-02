@@ -8,5 +8,6 @@ Disallow: /api/
 
 Sitemap: https://www.quickmoment.fun/sitemap.xml
 Sitemap: https://www.quickmoment.fun/sitemap-core.xml
+Sitemap: https://www.quickmoment.fun/sitemap-news.xml
 Sitemap: https://www.quickmoment.fun/sitemap-blogs.xml
 Sitemap: https://www.quickmoment.fun/sitemap-calculators.xml

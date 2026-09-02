@@ -16,6 +16,10 @@
       "destination": "/sitemap-core.xml"
     },
     {
+      "source": "/sitemap-news.xml",
+      "destination": "/sitemap-news.xml"
+    },
+    {
       "source": "/sitemap-blogs.xml",
       "destination": "/sitemap-blogs.xml"
     },
