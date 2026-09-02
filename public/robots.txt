@@ -1,74 +1,12 @@
 # QuickMoments Robots Configuration
 # https://www.quickmoment.fun
 
-# Global Web Crawlers
 User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /api/
 
-# Google Web & Google News Crawlers
-User-agent: Googlebot
-Allow: /
-
-User-agent: Googlebot-News
-Allow: /
-Allow: /newsroom
-Allow: /blog
-
-User-agent: Google-Extended
-Allow: /
-
-# OpenAI / ChatGPT Search & LLM Discovery Crawlers
-User-agent: GPTBot
-Allow: /
-
-User-agent: OAI-SearchBot
-Allow: /
-
-User-agent: ChatGPT-User
-Allow: /
-
-# Anthropic Claude Crawlers
-User-agent: ClaudeBot
-Allow: /
-
-User-agent: anthropic-ai
-Allow: /
-
-# Perplexity AI Search Crawler
-User-agent: PerplexityBot
-Allow: /
-
-# Apple Intelligence & Siri Crawlers
-User-agent: Applebot
-Allow: /
-
-User-agent: Applebot-Extended
-Allow: /
-
-# Microsoft Bing & Copilot
-User-agent: Bingbot
-Allow: /
-
-# Meta / Facebook & Social Media Link Preview Bots
-User-agent: facebookexternalhit
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: LinkedInBot
-Allow: /
-
-User-agent: WhatsApp
-Allow: /
-
-# LLM Discovery Indices
-# See /llms.txt and /llms-full.txt for markdown documentation
-
-# Sitemaps Declaration
 Sitemap: https://www.quickmoment.fun/sitemap.xml
-Sitemap: https://www.quickmoment.fun/sitemap-news.xml
+Sitemap: https://www.quickmoment.fun/sitemap-core.xml
 Sitemap: https://www.quickmoment.fun/sitemap-blogs.xml
 Sitemap: https://www.quickmoment.fun/sitemap-calculators.xml

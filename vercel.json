@@ -12,8 +12,8 @@
       "destination": "/sitemap.xml"
     },
     {
-      "source": "/sitemap-news.xml",
-      "destination": "/sitemap-news.xml"
+      "source": "/sitemap-core.xml",
+      "destination": "/sitemap-core.xml"
     },
     {
       "source": "/sitemap-blogs.xml",
@@ -42,10 +42,6 @@
     {
       "source": "/((?!api/|.*\\.(?:xml|txt|json|png|jpg|jpeg|svg|ico|webp|js|css)$).*)",
       "destination": "/index.html"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
     }
   ],
   "headers": [
@@ -59,7 +55,7 @@
       ]
     },
     {
-      "source": "/sitemap(.*)\\.xml",
+      "source": "/(sitemap.*\\.xml)",
       "headers": [
         {
           "key": "Content-Type",

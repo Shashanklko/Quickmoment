@@ -1,44 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- Core Hubs -->
-  <url>
-    <loc>https://www.quickmoment.fun/</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://www.quickmoment.fun/statistics</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.quickmoment.fun/simulations</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.quickmoment.fun/converters</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.quickmoment.fun/developer</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.quickmoment.fun/arcade</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.80</priority>
-  </url>
-
   <!-- Finance & Tax Calculators -->
   <url>
     <loc>https://www.quickmoment.fun/calculators/emi-calculator</loc>
@@ -101,7 +63,7 @@
     <priority>0.85</priority>
   </url>
 
-  <!-- Health & Everyday Math Calculators -->
+  <!-- Health & Everyday Calculators -->
   <url>
     <loc>https://www.quickmoment.fun/calculators/bmi-calculator</loc>
     <lastmod>2026-09-02</lastmod>
@@ -167,60 +129,6 @@
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
-  </url>
-
-  <!-- Statistics & Probability -->
-  <url>
-    <loc>https://www.quickmoment.fun/statistics/descriptive-statistics</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.quickmoment.fun/statistics/binomial-distribution</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.quickmoment.fun/statistics/linear-regression</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.quickmoment.fun/statistics/confidence-interval</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <!-- Simulations -->
-  <url>
-    <loc>https://www.quickmoment.fun/simulations/monte-carlo-pi</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.quickmoment.fun/simulations/monte-carlo-investment</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <!-- Converters & Dev Tools -->
-  <url>
-    <loc>https://www.quickmoment.fun/converters/unit-converter</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.quickmoment.fun/developer/developer-tools</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
   </url>
 
 </urlset>
