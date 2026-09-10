@@ -37,8 +37,9 @@ export function App() {
   // 3-Mode state ('newsroom' | 'calculator' | 'blog')
   const [currentMode, setCurrentMode] = useState<AppMode>(() => {
     const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
-    if (pathname === '/newsroom') return 'newsroom';
+    if (pathname === '/' || pathname === '/newsroom') return 'newsroom';
     if (pathname === '/blog' || pathname.startsWith('/blog/')) return 'blog';
+    if (pathname === '/calculators' || pathname.startsWith('/calculators/')) return 'calculator';
     
     const params = new URLSearchParams(window.location.search);
     const modeParam = params.get('mode') as AppMode;
@@ -52,7 +53,7 @@ export function App() {
     if (saved && ['newsroom', 'calculator', 'blog'].includes(saved)) {
       return saved;
     }
-    return 'calculator';
+    return 'newsroom';
   });
 
   // Welcome Mode Selection Modal (Show on first visit or when triggered)
@@ -95,7 +96,10 @@ export function App() {
 
     let newPath = '/';
     if (mode === 'newsroom') {
-      newPath = '/newsroom';
+      newPath = '/';
+    } else if (mode === 'calculator') {
+      newPath = '/calculators';
+      setCurrentView('home');
     } else if (mode === 'blog') {
       newPath = '/blog';
     }
@@ -125,10 +129,13 @@ export function App() {
       const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
       const params = new URLSearchParams(window.location.search);
 
-      if (pathname === '/newsroom') {
+      if (pathname === '/' || pathname === '/newsroom') {
         setCurrentMode('newsroom');
       } else if (pathname === '/blog' || pathname.startsWith('/blog/')) {
         setCurrentMode('blog');
+      } else if (pathname === '/calculators') {
+        setCurrentMode('calculator');
+        setCurrentView('home');
       } else if (pathname.startsWith('/calculators/')) {
         const rawSlug = pathname.replace('/calculators/', '');
         const cleanSlug = resolveCalcSlug(rawSlug);
@@ -242,9 +249,25 @@ export function App() {
 
   // Navigation handlers
   const handleNavigate = (view: string, slug?: string) => {
+    if (view === 'newsroom') {
+      handleSelectMode('newsroom');
+      return;
+    }
+    if (view === 'blog') {
+      handleSelectMode('blog');
+      return;
+    }
+    if (view === 'home' || view === 'calculators') {
+      setCurrentMode('calculator');
+      setCurrentView('home');
+      window.history.pushState({}, '', '/calculators');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     setCurrentMode('calculator');
     setCurrentView(view);
-    let newPath = '/';
+    let newPath = '/calculators';
 
     if (view === 'calculator' && slug) {
       const cleanSlug = resolveCalcSlug(slug);
@@ -300,7 +323,7 @@ export function App() {
   useEffect(() => {
     if (currentMode === 'calculator') {
       if (currentView === 'home') {
-        updatePageSeo(SEO_PRESETS.home());
+        updatePageSeo(SEO_PRESETS.calculatorsHub());
       } else if (currentView === 'calculator' && activeCalculator) {
         updatePageSeo(SEO_PRESETS.calculator(activeCalculator));
       } else if (currentView === 'simulations') {

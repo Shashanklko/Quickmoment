@@ -44,8 +44,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Logo & Brand */}
         <div
           onClick={() => {
-            onSelectMode('calculator');
-            onNavigate('home');
+            onSelectMode('newsroom');
           }}
           className="cursor-pointer shrink-0 flex items-center"
         >

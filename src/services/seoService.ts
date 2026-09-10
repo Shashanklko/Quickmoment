@@ -119,43 +119,35 @@ export function updatePageSeo(config: SeoConfig) {
  */
 export const SEO_PRESETS = {
   home: (): SeoConfig => ({
-    title: 'QuickMoments — Precision Calculators, Live NewsRoom & Research Journal',
+    title: 'QuickMoments — Live Breaking News, Market Intelligence & Financial Journal',
     description:
-      'High-precision financial, tax, and health calculation suites, real-time market intelligence from The Economic Times & Yahoo Finance, and peer-reviewed research blogs.',
+      'Real-time news feeds from The Economic Times & Yahoo Finance across Technology, Stock Markets, and Macro Economy, combined with 15+ high-precision financial calculators and peer-reviewed research blogs.',
     canonicalPath: '/',
     keywords: [
       'QuickMoments',
+      'Economic Times news live',
+      'stock market news live',
+      'NIFTY 50 live updates',
+      'SENSEX live',
+      'tech news India',
       'precision calculators',
       'EMI calculator',
       'SIP calculator',
-      'Economic Times news',
-      'stock market live',
       'Monte Carlo simulations',
-      'financial modeling',
       'income tax FY 2025-26',
     ],
     structuredData: [
       {
-        '@type': 'WebApplication',
-        '@id': `${BASE_URL}/#app`,
-        name: 'QuickMoments',
-        url: BASE_URL,
-        applicationCategory: 'FinanceApplication, BusinessApplication, EducationalApplication',
-        operatingSystem: 'All',
-        description:
-          'Multi-mode computational intelligence platform combining precision financial engines, live market newsroom, and academic research journal.',
-        offers: {
-          '@type': 'Offer',
-          price: '0',
-          priceCurrency: 'USD',
-        },
-      },
-      {
-        '@type': 'Organization',
+        '@type': 'NewsMediaOrganization',
         '@id': `${BASE_URL}/#organization`,
         name: 'QuickMoments Intelligence',
         url: BASE_URL,
         logo: `${BASE_URL}/favicon.png`,
+        publishingPrinciples: `${BASE_URL}/blog`,
+        sameAs: [
+          'https://economictimes.indiatimes.com',
+          'https://finance.yahoo.com',
+        ],
       },
       {
         '@type': 'WebSite',
@@ -166,6 +158,54 @@ export const SEO_PRESETS = {
           '@type': 'SearchAction',
           target: `${BASE_URL}/?search={search_term_string}`,
           'query-input': 'required name=search_term_string',
+        },
+      },
+      {
+        '@type': 'WebApplication',
+        '@id': `${BASE_URL}/#app`,
+        name: 'QuickMoments',
+        url: BASE_URL,
+        applicationCategory: 'NewsApplication, FinanceApplication, EducationalApplication',
+        operatingSystem: 'All',
+        description:
+          'Multi-mode news intelligence and computational platform combining real-time Economic Times market newsroom, precision financial engines, and academic research journal.',
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD',
+        },
+      },
+    ],
+  }),
+
+  calculatorsHub: (): SeoConfig => ({
+    title: '15+ Precision Financial & Scientific Calculators — QuickMoments',
+    description:
+      'High-precision financial, tax, and health calculation suites with reducing-balance EMI amortization, SIP compounding, Monte Carlo simulations, and tax regime comparisons.',
+    canonicalPath: '/calculators',
+    keywords: [
+      'precision calculators',
+      'EMI calculator',
+      'SIP calculator',
+      'income tax calculator FY 2025-26',
+      'Monte Carlo simulator',
+      'salary calculator',
+      'retirement planning',
+      'rent vs buy calculator',
+    ],
+    structuredData: [
+      {
+        '@type': 'WebApplication',
+        '@id': `${BASE_URL}/calculators#app`,
+        name: 'QuickMoments Calculator Studio',
+        url: `${BASE_URL}/calculators`,
+        applicationCategory: 'FinanceApplication, EducationalApplication',
+        operatingSystem: 'All',
+        description: 'Suite of 15+ institutional-grade financial, statistical, and simulation calculators.',
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD',
         },
       },
     ],

@@ -8,42 +8,6 @@
       "destination": "https://query1.finance.yahoo.com/$1"
     },
     {
-      "source": "/sitemap.xml",
-      "destination": "/sitemap.xml"
-    },
-    {
-      "source": "/sitemap-core.xml",
-      "destination": "/sitemap-core.xml"
-    },
-    {
-      "source": "/sitemap-news.xml",
-      "destination": "/sitemap-news.xml"
-    },
-    {
-      "source": "/sitemap-blogs.xml",
-      "destination": "/sitemap-blogs.xml"
-    },
-    {
-      "source": "/sitemap-calculators.xml",
-      "destination": "/sitemap-calculators.xml"
-    },
-    {
-      "source": "/robots.txt",
-      "destination": "/robots.txt"
-    },
-    {
-      "source": "/llms.txt",
-      "destination": "/llms.txt"
-    },
-    {
-      "source": "/llms-full.txt",
-      "destination": "/llms-full.txt"
-    },
-    {
-      "source": "/ads.txt",
-      "destination": "/ads.txt"
-    },
-    {
       "source": "/((?!api/|.*\\.(?:xml|txt|json|png|jpg|jpeg|svg|ico|webp|js|css)$).*)",
       "destination": "/index.html"
     }

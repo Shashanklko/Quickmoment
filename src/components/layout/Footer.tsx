@@ -13,11 +13,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           {/* Brand Col */}
           <div className="flex flex-col gap-3">
-            <div onClick={() => onNavigate('home')}>
+            <div onClick={() => onNavigate('newsroom')}>
               <GearMathLogo size="sm" showText={true} />
             </div>
             <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400">
-              The next-generation calculation, statistics, and simulation SaaS platform. Calculate anything in seconds. Understand everything with clarity.
+              Live Economic Times & Yahoo Finance market intelligence, institutional-grade calculation engines, and peer-reviewed research journals.
             </p>
             <div className="flex items-center gap-2 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
               <ShieldCheck className="w-3.5 h-3.5" />

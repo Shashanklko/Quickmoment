@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- 1. Core Platform Pages & Hubs -->
-  <sitemap>
-    <loc>https://www.quickmoment.fun/sitemap-core.xml</loc>
-    <lastmod>2026-09-02T12:00:00+05:30</lastmod>
-  </sitemap>
-
-  <!-- 2. Real-Time Economic Times NewsRoom Intelligence Feed -->
+  <!-- 1. Real-Time Economic Times & Market Intelligence News Feed (Primary) -->
   <sitemap>
     <loc>https://www.quickmoment.fun/sitemap-news.xml</loc>
-    <lastmod>2026-09-02T12:00:00+05:30</lastmod>
+    <lastmod>2026-09-10T11:00:00+05:30</lastmod>
+  </sitemap>
+
+  <!-- 2. Core Platform Pages & Hubs -->
+  <sitemap>
+    <loc>https://www.quickmoment.fun/sitemap-core.xml</loc>
+    <lastmod>2026-09-10T11:00:00+05:30</lastmod>
   </sitemap>
 
   <!-- 3. Deep Research Articles & Financial Blogs -->
   <sitemap>
     <loc>https://www.quickmoment.fun/sitemap-blogs.xml</loc>
-    <lastmod>2026-09-02T12:00:00+05:30</lastmod>
+    <lastmod>2026-09-10T11:00:00+05:30</lastmod>
   </sitemap>
 
   <!-- 4. High-Precision Calculators & Simulation Engines -->
   <sitemap>
     <loc>https://www.quickmoment.fun/sitemap-calculators.xml</loc>
-    <lastmod>2026-09-02T12:00:00+05:30</lastmod>
+    <lastmod>2026-09-10T11:00:00+05:30</lastmod>
   </sitemap>
 
 </sitemapindex>
