@@ -1,9 +1,20 @@
-# QuickMoments Robots Configuration
-# https://www.quickmoment.fun
-
 User-agent: *
 Allow: /
-Disallow: /admin
-Disallow: /api/
+
+# Explicit rules for AI Search Engine Crawlers to maximize search discovery
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
 
 Sitemap: https://www.quickmoment.fun/sitemap.xml
